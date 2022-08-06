@@ -2,24 +2,80 @@
 
 {% block 'conteudo' %}
 
-    <div style="text-align:center;" class="container">
-        <h1>{{livro.nome}}</h1>
-        <h1>{{livro.autor}}</h1>
-        <h1>{{livro.co_autor}}</h1>
-        <h1>{{livro.data_cadastro}}</h1>
-        <h1>Emprestado:</h1>
+<div class="container">
+    <br>
+    
+    <form action="#" method="POST">
+        {% csrf_token %}
+        <p>
+            <label> Nome do livro:</label>
+            <input class="form-control" type="text" value="{{livro.nome}}">
+        </p>
+
+        <p>
+            <label> Autor:</label>
+            <input style="width:40%;" class="form-control" type="text" value="{{livro.autor}}">
+        </p>
+        <p>
+            <label> Co-Autor:</label>
+            <input style="width:40%;" class="form-control" type="text" value="{{livro.co_autor}}">
+        </p>
+        <p>
+            <label> Data cadastro:</label>
+            <input style="width:40%;" class="form-control" type="text" value="{{livro.data_cadastro}}">
+        </p>
+        
+        <label>Categoria</label>
+        <select style="width:20%;" class="form-control" name="categoria">
+            {% for i in categoria_livro %}
+                {% if livro.categoria == i %}
+                    <option selected>{{i}}</option>
+                    {% else %}
+                    <option>{{i}}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        <br>
+
+        <label>Emprestado &nbsp;</label>
         {% if livro.emprestado %}
-        <svg style="color:green; display:inline;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
-            <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
-        </svg>
+            <input style="transform:scale(1.5);" checked type="checkbox" name="emprestado">
         {% else %}
-        <svg style="display:inline; color:red;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
-        </svg>
+            <input style="transform:scale(1.5);" type="checkbox" name="emprestado">
         {% endif %}
         <br>
-        <button>Ver histórico de emprestimo</button>
-    </div>
+        
+
+        <input type="submit" class="btn btn-success btn-lg" value="Salvar">
+    </form>
+    <hr>
+    <h1>Histórico de emprestimo</h1>
+    <table class="table table-striped table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Nome</th>
+            <th scope="col">Data Emprestimo</th>
+            <th scope="col">Data Devolução</th>
+            <th scope="col">Tempo Duração</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for i in emprestimos %}
+                <tr>
+                    {% if i.nome_emprestado_anonimo == None %}
+                        <th scope="row">{{i.nome_emprestado}}</th>
+                    {% else %}
+                        <th scope="row">{{i.nome_emprestado_anonimo}}</th>
+                    {% endif %}
+                    <td>{{i.data_emprestimo}}</td>
+                    <td>{{i.data_devolucao}}</td>
+                    <td>@mdo</td>
+                </tr>      
+            {% endfor %}   
+        </tbody>
+      </table>
+
+</div>
 
 
 {% endblock %}
