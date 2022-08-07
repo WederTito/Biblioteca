@@ -18,7 +18,7 @@
         {% if usuario_logado %}
                 <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-      Cadastrar Livro
+      Cadastrar
     </button>
 
    
@@ -43,8 +43,14 @@
             </button>
           </div>
           <div class="modal-body">
-            
-            <form action="{% url 'cadastar_livro' %}" method="POST">
+            <button style="margin-left: 10px" onclick="mostrar_form(1)" class="btn btn-info">Categoria</button>
+            <button style="margin-left: 10px" onclick="mostrar_form(2)" class="btn btn-warning">Livro</button>
+            <button style="margin-left: 10px" onclick="mostrar_form(3)" class="btn btn-primary">Emprestimo</button>
+            <br>
+            <hr>
+
+            <div style="display: none;" id="livro">
+              <form action="{% url 'cadastar_livro' %}" method="POST">
               {% csrf_token %}
               <table>
                 {{form.as_table}}
@@ -52,12 +58,55 @@
 
               <input type="submit" class="btn btn-success" value="Cadastrar">
 
-            </form>
+              </form>
+            </div>
+
+            <div style="display: none;" id="categoria">
+                <form action="{% url 'cadastar_categoria' %}" method="POST"> {% csrf_token %}
+                  <table>
+                    {{form_categoria.as_table}}
+                  </table>
+                  <input type="hidden" name="usuario" value="{{usuario_logado}}">
+                  <input class="btn btn-success" type="submit" value="Enviar">
+                </form>
+            </div>
+
+            <div style="display: none;" id="emprestimo">
+              Emprestimo
+            </div>
+          
           </div>
         </div>
       </div>
     </div>
  {% endif %}
+
+    <script>
+      function mostrar_form(v1){
+        categoria = document.getElementById('categoria')
+        livro = document.getElementById('livro')
+        emprestimo = document.getElementById('emprestimo')
+
+        if(v1 == 1){
+          categoria.style.display = 'block';
+  
+          livro.style.display = 'none';
+          emprestimo.style.display = 'none';
+        }else if(v1 == 2){
+          livro.style.display = 'block';
+
+          emprestimo.style.display = 'none';
+          categoria.style.display = 'none';
+        }else if(v1 == 3){
+          emprestimo.style.display = 'block';
+
+          livro.style.display = 'none';
+          categoria.style.display = 'none';
+        }
+
+
+      }
+    </script>
 
   </body>
 </html>
