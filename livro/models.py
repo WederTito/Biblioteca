@@ -1,7 +1,12 @@
-from tabnanny import verbose
-from django.db import models
+import datetime
 from datetime import date
+from email.headerregistry import DateHeader
+from random import choices
+from tabnanny import verbose
+
+from django.db import models
 from usuarios.models import Usuario
+
 
 class Categoria(models.Model):
     nome = models.CharField(max_length=30)
@@ -17,7 +22,6 @@ class Livros(models.Model):
     co_autor = models.CharField(max_length = 30, blank = True)
     data_cadastro = models.DateField(default = date.today)
     emprestado = models.BooleanField(default = False)
-     
     categoria = models.ForeignKey(Categoria, on_delete=models.DO_NOTHING)
     usuario =  models.ForeignKey(Usuario, on_delete=models.DO_NOTHING)
 
@@ -28,11 +32,18 @@ class Livros(models.Model):
         return self.nome
 
 class Emprestimos(models.Model):
+    choices = (
+        ('P', 'Péssimo'),
+        ('R', 'Ruim'),
+        ('B', 'Bom'),
+        ('O', 'Ótimo')
+    )
     nome_emprestado = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING, blank = True, null = True)
     nome_emprestado_anonimo = models.CharField(max_length = 30, blank = True, null = True)
-    data_emprestimo = models.DateField(blank = True, null = True)
-    data_devolucao = models.DateField(blank = True, null = True)
+    data_emprestimo = models.DateTimeField(default=datetime.datetime.now())
+    data_devolucao = models.DateTimeField(blank = True, null = True)
     livro = models.ForeignKey(Livros, on_delete=models.DO_NOTHING)
-
+    avaliacao = models.CharField(max_length=1, choices=choices, null=True, blank=True)
+    
     def __str__(self) -> str:
             return f"{self.nome_emprestado} | {self.livro}"
