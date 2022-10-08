@@ -141,9 +141,10 @@ def processa_avaliacao(request):
     id_emprestimo = request.POST.get('id_emprestimo')
     opcoes = request.POST.get('opcoes')
     id_livro = request.POST.get('id_livro')
-
     emprestimo = Emprestimos.objects.get(id = id_emprestimo)
-    emprestimo.avaliacao = opcoes
-    emprestimo.save()
-
-    return redirect(f'/livro/ver_livros/{id_livro}')
+    if emprestimo.livro.usuario.id == request.session['usuario']:
+        emprestimo.avaliacao = opcoes
+        emprestimo.save()
+        return redirect(f'/livro/ver_livros/{id_livro}')
+    else:
+        return HttpResponse('Deu errado')
